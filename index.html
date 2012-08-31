@@ -3,6 +3,7 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
@@ -15,6 +16,10 @@
 		h3{margin-top:30px;padding-top:30px;border-top:1px solid #CCC;}
 		a.run{display:inline-block;width:80px;line-height:30px;font-size:16px;font-weight:bold;text-align:center;border:1px solid #CCC;border-radius:30px;}
 		a.run:hover{color:#303030;}
+		@media (max-width:768px) {
+			.inner{width:auto;padding:10px;}
+			a.button,#download-zip, #download-tar-gz,#view-on-github{display:block;float:none;margin:10px auto;}
+		}
     </style>
   </head>
 
