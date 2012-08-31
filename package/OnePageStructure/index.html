@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>搜狐微博</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<script type="text/javascript" src="iscroll.js"></script>
+<script type="text/javascript">
+var myScroll,
+	pullDownEl, pullDownOffset,
+	pullUpEl, pullUpOffset,
+	generatedCount = 0;
+
+function pullDownAction () {
+	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+		var el, li, i;
+		el = document.getElementById('thelist');
+
+		for (i=0; i<10; i++) {
+			li = document.createElement('li');
+			li.innerHTML = 'Generated row ' + (++generatedCount) + '';
+			el.insertBefore(li, el.childNodes[0]);
+		}
+		
+		myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+}
+
+function pullUpAction () {
+	setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+		var el, li, i;
+		el = document.getElementById('thelist');
+
+		for (i=0; i<10; i++) {
+			li = document.createElement('li');
+			li.innerHTML = 'Generated row ' + (++generatedCount) + '';
+			el.appendChild(li, el.childNodes[0]);
+		}
+		
+		myScroll.refresh();		// Remember to refresh when contents are loaded (ie: on ajax completion)
+	}, 1000);	// <-- Simulate network congestion, remove setTimeout from production!
+}
+
+function loaded() {
+	pullDownEl = document.getElementById('pullDown');
+	pullDownOffset = pullDownEl.offsetHeight;
+	pullUpEl = document.getElementById('pullUp');	
+	pullUpOffset = pullUpEl.offsetHeight;
+	
+	myScroll = new iScroll('wrapper', {
+		useTransition: true,
+		checkDOMChanges: true,
+		topOffset: pullDownOffset,
+		onRefresh: function () {
+			if (pullDownEl.className.match('loading')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
+			} else if (pullUpEl.className.match('loading')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+			}
+		},
+		onScrollMove: function () {
+			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'flip';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
+				this.minScrollY = 0;
+			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
+				this.minScrollY = -pullDownOffset;
+			} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+				pullUpEl.className = 'flip';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Release to refresh...';
+				this.maxScrollY = this.maxScrollY;
+			} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+				this.maxScrollY = pullUpOffset;
+			}
+		},
+		onScrollEnd: function () {
+			if (pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'loading';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';				
+				pullDownAction();	// Execute custom function (ajax call?)
+			} else if (pullUpEl.className.match('flip')) {
+				pullUpEl.className = 'loading';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';				
+				pullUpAction();	// Execute custom function (ajax call?)
+			}
+		}
+	});
+	
+}
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 500); }, false);
+</script>
+
+<style type="text/css" media="all">
+
+
+
+/**
+ *
+ * Pull down styles
+ *
+ */
+#pullDown, #pullUp {
+	background:#fff;
+	height:40px;
+	line-height:40px;
+	padding:5px 10px;
+	border-bottom:1px solid #ccc;
+	font-weight:bold;
+	font-size:14px;
+	color:#888;
+}
+#pullDown .pullDownIcon, #pullUp .pullUpIcon  {
+	display:block; float:left;
+	width:40px; height:40px;
+	background:url(pull-icon@2x.png) 0 0 no-repeat;
+	-webkit-background-size:40px 80px; background-size:40px 80px;
+	-webkit-transition-property:-webkit-transform;
+	-webkit-transition-duration:250ms;	
+}
+#pullDown .pullDownIcon {
+	-webkit-transform:rotate(0deg) translateZ(0);
+}
+#pullUp .pullUpIcon  {
+	-webkit-transform:rotate(-180deg) translateZ(0);
+}
+
+#pullDown.flip .pullDownIcon {
+	-webkit-transform:rotate(-180deg) translateZ(0);
+}
+
+#pullUp.flip .pullUpIcon {
+	-webkit-transform:rotate(0deg) translateZ(0);
+}
+
+#pullDown.loading .pullDownIcon, #pullUp.loading .pullUpIcon {
+	background-position:0 100%;
+	-webkit-transform:rotate(0deg) translateZ(0);
+	-webkit-transition-duration:0ms;
+
+	-webkit-animation-name:loading;
+	-webkit-animation-duration:2s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-timing-function:linear;
+}
+
+@-webkit-keyframes loading {
+	from { -webkit-transform:rotate(0deg) translateZ(0); }
+	to { -webkit-transform:rotate(360deg) translateZ(0); }
+}
+
+</style>
+
+
+<style>
+html,body,ul,li{padding:0;margin:0;}
+
+.oWrap{display:-webkit-box;-webkit-box-orient:vertical;}
+.Wrap{-webkit-box-flex:1;	position:relative;}
+.box{display:-webkit-box;-webkit-box-orient:vertical;}
+.mWrap{position:relative!important;-webkit-box-flex:1;}
+.iWrap{position:static!important;}
+
+.oWrap{position:absolute;width:100%;top:0;bottom:0;}
+.box{position:absolute;width:100%;top:0;bottom:0;}
+.mWrap{background:#EEE;}
+
+.box{left:-100%;}
+
+
+</style>
+
+
+</head>
+<body>
+
+<div class="oWrap">
+	<div class="header" style="background:#B00;" onclick="this.innerHTML += '<br>aaa'">全局固顶部分</div>
+	<div class="Wrap"><!--  -->
+		<div class="box" style="left:0;">
+			<div class="header" style="background:#2BC;" onclick="this.innerHTML += '<br>aaa'">当前box固顶部分</div>
+			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
+				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
+					<div id="pullDown">
+						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
+					</div>
+					<ul id="thelist">
+						<li>
+							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
+							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
+							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
+							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
+						</li>
+					</ul>
+					<div id="pullUp">
+						<i class="pullUpIcon"></i><span class="pullUpLabel">Pull up to refresh...</span>
+					</div>
+				</div>
+				<!-- iScrollBar，js运行后会自动生成于此-->
+			</div>
+			<div class="footer" style="background:#2BC;" onclick="this.innerHTML += '<br>aaa'">当前box固底部分</div>
+		</div>
+		<div class="box">another box</div>
+	</div>
+	<div class="footer" style="background:#B00;" onclick="this.innerHTML += '<br>aaa'">全局固底部分</div>
+</div>
+
+</body>
+</html>

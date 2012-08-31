@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>[librajt] PageRuler</title>
+		
+		<!-- 遵循自适应设计(RWD, Responsive Web Design)的原则，页面呈现宽度适应屏幕 -->
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		
+		<!-- 允许应用全屏模式运行，通常称为独立模式 (standalone mode) 可以通过 window.navigator.standalone 属性来区别是否是独立模式运行 -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		
+		<style>
+			body{background:url(i/r.jpg);}
+		</style>
+		
+	</head>
+	<body>
+		<h1>页面（Device）尺寸测量</h1>
+		<h2>屏幕标尺，标尺刻度宽度为1px，间隔也为1px。</h2>
+		
+		<h3>一些其它数据</h3>
+		<div class="test"></div>
+		<script>
+			(function(d){
+				var res = ""; 
+				var Sys = {}; 
+				var ua = navigator.userAgent.toLowerCase(); 
+				var s; 
+				(s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] : 
+				(s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] : 
+				(s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] : 
+				(s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] : 
+				(s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0; 
+				//以下进行测试 
+				if (Sys.ie) res += 'IE: ' + Sys.ie; 
+				if (Sys.firefox) res += 'Firefox: ' + Sys.firefox; 
+				if (Sys.chrome) res += 'Chrome: ' + Sys.chrome; 
+				if (Sys.opera) res += 'Opera: ' + Sys.opera; 
+				if (Sys.safari) res += 'Safari: ' + Sys.safari; 
+				//输出屏幕相关参数
+				res += "<br>";
+				res += "网页可见区域宽： "               + document.body.clientWidth      + "<br>";
+				res += "网页可见区域高： "               + document.body.clientHeight     + "<br>";
+				res += "网页可见区域宽(包括边线的宽)： " + document.body.offsetWidth      + "<br>";  
+				res += "网页可见区域高(包括边线的高)： " + document.body.offsetHeight     + "<br>";  
+				res += "网页正文全文宽： "               + document.body.scrollWidth      + "<br>";
+				res += "网页正文全文高： "               + document.body.scrollHeight     + "<br>";
+				res += "屏幕分辨率的宽： "               + window.screen.width            + "<br>";
+				res += "屏幕分辨率的高： "               + window.screen.height           + "<br>";
+				res += "屏幕可用工作区宽度： "           + window.screen.availWidth       + "<br>";
+				res += "屏幕可用工作区高度： "           + window.screen.availHeight      + "<br>";
+				res += "window.innerHeight： "           + window.innerHeight             + "<br>";
+				
+				d.querySelector('.test').innerHTML = res;
+			})(document);
+		</script>
+
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-34417323-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+
+
+	</body>
+</html>
+
