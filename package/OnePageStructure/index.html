@@ -173,9 +173,11 @@ function getNextBox(b) {
 function setBoxClassName(b, s) {
 	b.className = 'box ' + s;
 }
+
+/*
 function roolLeftRun(cur, right) {
-		setBoxClassName(cur, '');
-		setBoxClassName(right, '_current');
+	setBoxClassName(cur, '');
+	setBoxClassName(right, '_current');
 }
 function roolLeft(t) {
 	var cur = getTheBox(t);
@@ -187,6 +189,7 @@ function roolLeft(t) {
 		roolLeftRun(cur, right);
 	}, 0);
 }
+
 function roolRightRun(cur, left) {
 	setBoxClassName(cur, '_right');
 	setBoxClassName(left, '_current');
@@ -213,6 +216,68 @@ function roolRight(t) {
 		roolRightRun2(cur, left);
 	}, 400);
 }
+*/
+
+function transitionEnd(evt) {
+    var elem = this;
+	evt.preventDefault();
+	elem.removeEventListener("webkitTransitionEnd", transitionEnd, false);
+	if (elem.moving) {
+	    elem.moving = false;
+		elem.callback();
+		clearTimeout(elem.timeout);
+	} else {
+	    return;
+	}
+}
+
+function addClassAnimate(elem, className, callback) {
+    elem.removeEventListener("webkitTransitionEnd", transitionEnd, false);
+	elem.addEventListener("webkitTransitionEnd", transitionEnd, false);
+	elem.callback = callback;
+	elem.moving = true;
+	elem.timeout = setTimeout(function() {
+	    if (elem.moving) {
+		    elem.moving = false;
+			elem.callback();
+		}
+	}, 400);
+	elem.className = ("box " + className);
+}
+
+function roolLeft(t) {
+	var cur = getTheBox(t);
+	var right = getNextBox(cur);
+
+	addClassAnimate(right, "_right _silence", function() {
+		addClassAnimate(right, "_current", function() {
+			//...
+		});
+		addClassAnimate(cur, "", function() {
+		});
+	});
+}
+
+function roolRight(t) {
+	var cur = getTheBox(t);
+	var left = getNextBox(cur);
+
+	addClassAnimate(left, "_left _silence", function() {
+		addClassAnimate(left, "_current", function() {
+		});
+		addClassAnimate(cur, "_right", function() {
+				addClassAnimate(cur, "_right _silence", function() {
+					addClassAnimate(cur, "_silence", function() {
+						addClassAnimate(cur, "", function() {
+						});
+					});
+				});
+		});
+	});
+}
+
+
+
 </script>
 
 
@@ -245,7 +310,7 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 
 
 /* color */
-.mWrap{background:#EEE;}
+.mWrap{background:#ccc;}
 .gHeader,.gFooter{background:#B00;}
 .oHeader,.oFooter{background:#2BB;}
 
@@ -265,7 +330,7 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 		<div class="box _current">
 			<div class="oHeader" style="height:36px;">
 				<div class="header1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分1</div>
-				<div class="header2" onclick="return false;this.innerHTML += '<br>bbb'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分2 <a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
+				<div class="header2"><a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
 			</div>
 			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
@@ -291,7 +356,13 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 				<div class="footer2" onclick="this.innerHTML += '<br>bbb'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固底部分2</div>
 			</div>
 		</div>
-		<div class="box">another box <a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
+		<div class="box">
+			<div class="oHeader">
+				<div>another box</div>
+				<div><a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
+			</div>
+		</div>
+			
 	</div>
 	<div class="gFooter" style="height:36px;">
 		<div class="footer1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">全局固底部分1</div>
