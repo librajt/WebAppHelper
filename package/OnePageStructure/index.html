@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>搜狐微博</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
@@ -262,13 +262,47 @@ function roolRight(t) {
 	addClassAnimate(left, "_left _silence", function() {
 		addClassAnimate(left, "_current", function() {});
 		addClassAnimate(cur, "_right", function() {
-			addClassAnimate(cur, "_right _silence", function() {
-				addClassAnimate(cur, "_silence", function() {
-					addClassAnimate(cur, "", function() {});
-				});
+			addClassAnimate(cur, "_silence", function() {
+				addClassAnimate(cur, "", function() {});
 			});
 		}, 400);
 	});
+}
+
+function seeTop(t) {
+	var cur = getTheBox(t);
+	var top = getNextBox(cur);
+
+	addClassAnimate(top, "_top _silence", function() {
+		addClassAnimate(top, "_middle", function() {});
+	});
+}
+function hideTop(t) {
+	var top = getTheBox(t);
+
+	addClassAnimate(top, "_top", function() {
+		addClassAnimate(top, "_silence", function() {
+			addClassAnimate(top, "", function() {});
+		});
+	}, 400);
+}
+
+function seeBottom(t) {
+	var cur = getTheBox(t);
+	var bottom = getNextBox(cur);
+
+	addClassAnimate(bottom, "_bottom _silence", function() {
+		addClassAnimate(bottom, "_middle", function() {});
+	});
+}
+function hideBottom(t) {
+	var bottom = getTheBox(t);
+
+	addClassAnimate(bottom, "_bottom", function() {
+		addClassAnimate(bottom, "_silence", function() {
+			addClassAnimate(bottom, "", function() {});
+		});
+	}, 400);
 }
 
 
@@ -277,7 +311,7 @@ function roolRight(t) {
 
 
 <style>
-html,body,ul,li{padding:0;margin:0;overflow:hidden;}
+html,body,ul,li{padding:0;margin:0;overflow:hidden;-webkit-text-size-adjust:none;}
 
 /* layout */
 .gWrap{display:-webkit-box;-webkit-box-orient:vertical;}
@@ -294,12 +328,16 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 .gHeader,.oHeader,.gFooter,.oFooter{line-height:18px;height:36px;overflow:hidden;-webkit-transition:height .2s;}
 /*.gHeader[style*="height"]{overflow:hidden;-webkit-transition:height .2s;}*/
 
-.box{-webkit-transition:-webkit-transform .4s;-webkit-transform:translateX(-100%);}
+.box{-webkit-transition:-webkit-transform .4s;-webkit-transform:translate3D(-100%, 0, 0);}
 ._silence{-webkit-transition:none;}
 
-._left{-webkit-transform:translateX(-100%);}
-._current{-webkit-transform:translateX(0);}
-._right{-webkit-transform:translateX(100%);}
+._left{-webkit-transform:translate3D(-100%, 0, 0);}
+._current{-webkit-transform:translate3D(0, 0, 0);}
+._right{-webkit-transform:translate3D(100%, 0, 0);}
+
+._top{-webkit-transform:translate3D(0, -100%, 0);z-index:2;}
+._middle{-webkit-transform:translate3D(0, 0, 0);z-index:2;}
+._bottom{-webkit-transform:translate3D(0, 100%, 0);z-index:2;}
 
 
 
@@ -324,8 +362,8 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 	<div class="oWrap"><!--  -->
 		<div class="box _current">
 			<div class="oHeader" style="height:36px;">
-				<div class="header1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分1</div>
-				<div class="header2"><a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
+				<div class="header1">TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
+				<div class="header2" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分2</div>
 			</div>
 			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
@@ -353,8 +391,10 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 		</div>
 		<div class="box">
 			<div class="oHeader">
-				<div>another box</div>
-				<div><a href="#" onclick="roolLeft(this);">ROOL LEFT</a> <a href="#" onclick="roolRight(this);">ROOL RIGHT</a></div>
+				<div>TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
+			</div>
+			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
+				<div class="iWrap">another box</div>
 			</div>
 		</div>
 			
