@@ -231,7 +231,7 @@ function transitionEnd(evt) {
 	}
 }
 
-function addClassAnimate(elem, className, callback) {
+function addClassAnimate(elem, className, callback, delay) {
     elem.removeEventListener("webkitTransitionEnd", transitionEnd, false);
 	elem.addEventListener("webkitTransitionEnd", transitionEnd, false);
 	elem.callback = callback;
@@ -241,7 +241,7 @@ function addClassAnimate(elem, className, callback) {
 		    elem.moving = false;
 			elem.callback();
 		}
-	}, 400);
+	}, delay != 0 ? delay : 0);
 	elem.className = ("box " + className);
 }
 
@@ -250,11 +250,8 @@ function roolLeft(t) {
 	var right = getNextBox(cur);
 
 	addClassAnimate(right, "_right _silence", function() {
-		addClassAnimate(right, "_current", function() {
-			//...
-		});
-		addClassAnimate(cur, "", function() {
-		});
+		addClassAnimate(right, "_current", function() {});
+		addClassAnimate(cur, "", function() {});
 	});
 }
 
@@ -263,16 +260,14 @@ function roolRight(t) {
 	var left = getNextBox(cur);
 
 	addClassAnimate(left, "_left _silence", function() {
-		addClassAnimate(left, "_current", function() {
-		});
+		addClassAnimate(left, "_current", function() {});
 		addClassAnimate(cur, "_right", function() {
-				addClassAnimate(cur, "_right _silence", function() {
-					addClassAnimate(cur, "_silence", function() {
-						addClassAnimate(cur, "", function() {
-						});
-					});
+			addClassAnimate(cur, "_right _silence", function() {
+				addClassAnimate(cur, "_silence", function() {
+					addClassAnimate(cur, "", function() {});
 				});
-		});
+			});
+		}, 400);
 	});
 }
 
@@ -297,7 +292,7 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;}
 
 /* animition */
 .gHeader,.oHeader,.gFooter,.oFooter{line-height:18px;height:36px;overflow:hidden;-webkit-transition:height .2s;}
-/*.gHeader[style*="height"]{overflow:hidden;-webkit-transition:height 2s;}*/
+/*.gHeader[style*="height"]{overflow:hidden;-webkit-transition:height .2s;}*/
 
 .box{-webkit-transition:-webkit-transform .4s;-webkit-transform:translateX(-100%);}
 ._silence{-webkit-transition:none;}
