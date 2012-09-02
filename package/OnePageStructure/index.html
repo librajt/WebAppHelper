@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html manifest="app.mainfest0">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>搜狐微博</title>
@@ -64,7 +64,13 @@ function loaded() {
 			}
 		},
 		onScrollMove: function () {
-			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+			if (this.y + pullDownOffset < 0 && document.querySelector('.gHeader').offsetHeight > -document.querySelector('.gHeader').offsetTop ) {
+				console.log('ggg   ' + this.y + '   ' + pullDownOffset);
+				document.querySelector('.gHeader').style.marginTop = ( this.y + pullDownOffset ) + 'px';
+			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < 0) {
+				console.log('ggg   ' + this.y + '   ' + pullDownOffset);
+				document.querySelector('.gHeader').style.marginTop = - document.querySelector('.gHeader').offsetHeight + ( this.y + pullDownOffset ) + 'px';
+			} else if (this.y > 5 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
 				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
 				this.minScrollY = 0;
@@ -95,6 +101,29 @@ function loaded() {
 		}
 	});
 	
+	// other onload functions
+	document.querySelector('.gHeader').style.height = document.querySelector('.gHeader').querySelector('div').clientHeight + 'px';
+	
+	//var gHeader = document.querySelector('.gHeader');
+	//var iWrap = document.querySelectorAll('.oBox')[1];
+	//var stx=sty=etx=ety=curX=curY=0;
+
+	//md.addEventListener("touchstart",function(event){
+	//		stx=event.touches[0].pageX;
+	//		sty=event.touches[0].pageY;
+	//		event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (etx) + 'px, ' + (ety) + 'px,0px)';
+	//	 },false);
+	//md.addEventListener("touchmove",function(event){
+	//	 event.preventDefault(); 
+	//	 curX = event.targetTouches[0].pageX - stx+etx; 
+	//	 curY = event.targetTouches[0].pageY - sty+ety;
+	//	 event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (curX) + 'px, ' + (curY) + 'px,0px)';
+	//},false);
+	//md.addEventListener("touchend",function(event){
+	//	etx=curX;
+	//   ety=curY;
+	//},false);   
+
 }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -161,62 +190,23 @@ document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 5
 </style>
 
 <script>
+function getTheBoxName(t) {
+	if(new RegExp("oBox").test(t.className)) return "oBox";
+	if(new RegExp("gBox").test(t.className)) return "gBox";
+	return getTheBoxName(t.parentNode);
+}
 function getTheBox(t) {
-	if(/box/.test(t.className)) return t;
-	return getTheBox(t.parentNode);
+	var boxName = getTheBoxName(t);
+	if(new RegExp(boxName).test(t.className)) return t;
+	return getTheBox(t.parentNode, boxName);
 }
 function getNextBox(b) {
-	var bArr = document.querySelectorAll('.box');
+	var boxName = getTheBoxName(b);
+	var bArr = document.querySelectorAll('.' + boxName);
 	if(bArr[0] == b) return bArr[1];
 	if(bArr[1] == b) return bArr[0];
 }
-function setBoxClassName(b, s) {
-	b.className = 'box ' + s;
-}
 
-/*
-function roolLeftRun(cur, right) {
-	setBoxClassName(cur, '');
-	setBoxClassName(right, '_current');
-}
-function roolLeft(t) {
-	var cur = getTheBox(t);
-	var right = getNextBox(cur);
-	//ready
-	setBoxClassName(right, '_right _silence');
-	//move
-	setTimeout(function(){
-		roolLeftRun(cur, right);
-	}, 0);
-}
-
-function roolRightRun(cur, left) {
-	setBoxClassName(cur, '_right');
-	setBoxClassName(left, '_current');
-}
-function roolRightRun2(cur, left) {
-	setBoxClassName(cur, '_silence');
-	setTimeout(function(){
-		roolRightRun3(cur, left);
-	}, 0);
-}
-function roolRightRun3(cur, left) {
-	setBoxClassName(cur, '');
-}
-function roolRight(t) {
-	var cur = getTheBox(t);
-	var left = getNextBox(cur);
-	//ready
-	setBoxClassName(left, '_left _silence');
-	//move
-	setTimeout(function(){
-		roolRightRun(cur, left);
-	}, 0);
-	setTimeout(function(){
-		roolRightRun2(cur, left);
-	}, 400);
-}
-*/
 
 function transitionEnd(evt) {
     var elem = this;
@@ -231,7 +221,7 @@ function transitionEnd(evt) {
 	}
 }
 
-function addClassAnimate(elem, className, callback, delay) {
+function addClassAnimate(elem, boxName, className, callback, delay) {
     elem.removeEventListener("webkitTransitionEnd", transitionEnd, false);
 	elem.addEventListener("webkitTransitionEnd", transitionEnd, false);
 	elem.callback = callback;
@@ -242,65 +232,71 @@ function addClassAnimate(elem, className, callback, delay) {
 			elem.callback();
 		}
 	}, delay != 0 ? delay : 0);
-	elem.className = ("box " + className);
+	elem.className = (boxName + " " + className);
 }
 
 function roolLeft(t) {
-	var cur = getTheBox(t);
-	var right = getNextBox(cur);
+	var boxName = getTheBoxName(t);
+	var cur = getTheBox(t, boxName);
+	var right = getNextBox(cur, boxName);
 
-	addClassAnimate(right, "_right _silence", function() {
-		addClassAnimate(right, "_current", function() {});
-		addClassAnimate(cur, "", function() {});
+	addClassAnimate(right, boxName, "_right _silence", function() {
+		addClassAnimate(right, boxName, "_current", function() {});
+		addClassAnimate(cur, boxName, "", function() {});
 	});
 }
 
 function roolRight(t) {
-	var cur = getTheBox(t);
-	var left = getNextBox(cur);
+	var boxName = getTheBoxName(t);
+	var cur = getTheBox(t, boxName);
+	var left = getNextBox(cur, boxName);
 
-	addClassAnimate(left, "_left _silence", function() {
-		addClassAnimate(left, "_current", function() {});
-		addClassAnimate(cur, "_right", function() {
-			addClassAnimate(cur, "_silence", function() {
-				addClassAnimate(cur, "", function() {});
+	addClassAnimate(left, boxName, "_left _silence", function() {
+		addClassAnimate(left, boxName, "_current", function() {});
+		addClassAnimate(cur, boxName, "_right", function() {
+			addClassAnimate(cur, boxName, "_silence", function() {
+				addClassAnimate(cur, boxName, "", function() {});
 			});
 		}, 400);
 	});
 }
 
 function seeTop(t) {
-	var cur = getTheBox(t);
-	var top = getNextBox(cur);
+	var boxName = getTheBoxName(t);
+	var cur = getTheBox(t, boxName);
+	var top = getNextBox(cur, boxName);
 
-	addClassAnimate(top, "_top _silence", function() {
-		addClassAnimate(top, "_middle", function() {});
+	addClassAnimate(top, boxName, "_top _silence", function() {
+		addClassAnimate(top, boxName, "_middle", function() {});
 	});
 }
 function hideTop(t) {
-	var top = getTheBox(t);
+	var boxName = getTheBoxName(t);
+	var top = getTheBox(t, boxName);
 
-	addClassAnimate(top, "_top", function() {
-		addClassAnimate(top, "_silence", function() {
-			addClassAnimate(top, "", function() {});
+	addClassAnimate(top, boxName, "_top", function() {
+		addClassAnimate(top, boxName, "_silence", function() {
+			addClassAnimate(top, boxName, "", function() {});
 		});
 	}, 400);
 }
 
 function seeBottom(t) {
-	var cur = getTheBox(t);
-	var bottom = getNextBox(cur);
+	var boxName = getTheBoxName(t);
+	var cur = getTheBox(t, boxName);
+	var bottom = getNextBox(cur, boxName);
 
-	addClassAnimate(bottom, "_bottom _silence", function() {
-		addClassAnimate(bottom, "_middle", function() {});
+	addClassAnimate(bottom, boxName, "_bottom _silence", function() {
+		addClassAnimate(bottom, boxName, "_middle", function() {});
 	});
 }
 function hideBottom(t) {
-	var bottom = getTheBox(t);
+	var boxName = getTheBoxName(t);
+	var bottom = getTheBox(t, boxName);
 
-	addClassAnimate(bottom, "_bottom", function() {
-		addClassAnimate(bottom, "_silence", function() {
-			addClassAnimate(bottom, "", function() {});
+	addClassAnimate(bottom, boxName, "_bottom", function() {
+		addClassAnimate(bottom, boxName, "_silence", function() {
+			addClassAnimate(bottom, boxName, "", function() {});
 		});
 	}, 400);
 }
@@ -311,58 +307,68 @@ function hideBottom(t) {
 
 
 <style>
-html,body,ul,li{padding:0;margin:0;overflow:hidden;-webkit-text-size-adjust:none;}
+html{-webkit-text-size-adjust:none;position:relative;height:100%;}
+body{padding:0;margin:0;overflow:hidden;position:relative;height:100%;}
+ul,li{padding:0;margin:0;}
 
 /* layout */
-.gWrap{display:-webkit-box;-webkit-box-orient:vertical;}
-.oWrap{-webkit-box-flex:1;	position:relative;}
-.box{display:-webkit-box;-webkit-box-orient:vertical;}
-.mWrap{position:relative!important;-webkit-box-flex:1;}
-.iWrap{position:static!important;}
+.gBox,.oBox{display:-webkit-box;-webkit-box-orient:vertical;}
+.oWrap,.mWrap{-webkit-box-flex:1;}
+.iWrap{}
 
-/* size */
-.gWrap{position:absolute;width:100%;top:0;bottom:0;}
-.box{position:absolute;width:100%;top:0;bottom:0;}
+/* box module */
+.gBox,.oBox{position:absolute;width:100%;top:0;bottom:0;overflow:hidden;}
+.oWrap,.mWrap{position:relative;}
+.gHeader,.oHeader,.gFooter,.oFooter{position:relative;z-index:3;line-height:30px;overflow:hidden;}
 
 /* animition */
-.gHeader,.oHeader,.gFooter,.oFooter{line-height:18px;height:36px;overflow:hidden;-webkit-transition:height .2s;}
-/*.gHeader[style*="height"]{overflow:hidden;-webkit-transition:height .2s;}*/
+.gHeader,.oHeader,.gFooter,.oFooter{-webkit-transition:height .4s;}
 
-.box{-webkit-transition:-webkit-transform .4s;-webkit-transform:translate3D(-100%, 0, 0);}
+.gBox,.oBox{-webkit-transition:-webkit-transform .4s;-webkit-transform:translate3D(-100%, 0, 0);}
 ._silence{-webkit-transition:none;}
 
+._left,._current,._right{z-index:1;}
 ._left{-webkit-transform:translate3D(-100%, 0, 0);}
 ._current{-webkit-transform:translate3D(0, 0, 0);}
 ._right{-webkit-transform:translate3D(100%, 0, 0);}
 
-._top{-webkit-transform:translate3D(0, -100%, 0);z-index:2;}
-._middle{-webkit-transform:translate3D(0, 0, 0);z-index:2;}
-._bottom{-webkit-transform:translate3D(0, 100%, 0);z-index:2;}
+._top,._middle,._bottom{z-index:2;}
+._top{-webkit-transform:translate3D(0, -100%, 0);}
+._middle{-webkit-transform:translate3D(0, 0, 0);}
+._bottom{-webkit-transform:translate3D(0, 100%, 0);}
 
 
+/* default size */
+.gHeader{height:30px;}
 
 
 /* color */
 .mWrap{background:#ccc;}
-.gHeader,.gFooter{background:#B00;}
+.gHeader,.gFooter{background:#FD0;}
 .oHeader,.oFooter{background:#2BB;}
-
-
+.gBox:nth-child(2){background:#99e;}
+.oBox:nth-child(2) .mWrap{background:#6FDB92;}
 </style>
 
 
 </head>
 <body>
 
-<div class="gWrap">
-	<div class="gHeader" style="height:36px;"><!-- 加载完毕添加高度值 -->
-		<div class="header1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">全局固顶部分1</div>
-		<div class="header2" onclick="this.innerHTML += '<br>bbb'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">全局固顶部分2</div>
+<div class="gBox _middle">
+	<div class="gHeader">
+		<div class="header1">
+			ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+			SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a>
+			HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a>
+			<br>
+			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 18) + 'px';">HEIGHT Up</a>
+			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 18) + 'px';">HEIGHT Down</a>
+		</div>
 	</div>
 	<div class="oWrap"><!--  -->
-		<div class="box _current">
+		<div class="oBox _current">
 			<div class="oHeader" style="height:36px;">
-				<div class="header1">TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
+				<div class="header1">ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
 				<div class="header2" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分2</div>
 			</div>
 			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
@@ -384,25 +390,28 @@ html,body,ul,li{padding:0;margin:0;overflow:hidden;-webkit-text-size-adjust:none
 				</div>
 				<!-- iScrollBar，js运行后会自动生成于此-->
 			</div>
-			<div class="oFooter" style="height:36px;">
-				<div class="footer1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固底部分1</div>
-				<div class="footer2" onclick="this.innerHTML += '<br>bbb'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固底部分2</div>
+			<div class="oFooter">
+				<div class="footer1">当前box固底部分1</div>
 			</div>
 		</div>
-		<div class="box">
-			<div class="oHeader">
-				<div>TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
-			</div>
-			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
-				<div class="iWrap">another box</div>
+		<div class="oBox">
+			<div class="mWrap">
+				ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> 
+				SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> 
+				HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a>
+				<p>another oBox</p>
 			</div>
 		</div>
 			
 	</div>
-	<div class="gFooter" style="height:36px;">
-		<div class="footer1" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">全局固底部分1</div>
-		<div class="footer2" onclick="this.innerHTML += '<br>bbb'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">全局固底部分2</div>
+	<div class="gFooter">
+		<div class="footer1">全局固底部分1</div>
 	</div>
+</div>
+
+<div class="gBox">
+	<div>ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
+	<div class="iWrap">another gBox</div>
 </div>
 
 </body>
