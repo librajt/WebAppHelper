@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>测试touch</title>
+      <meta charset=UTF-8>
+      <meta http-equiv="Cache-Control" content="no-cache">
+      <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+      <style>
+             body,html{margin:0px;}
+      </style>
+   </head>
+   <body>
+      <div style="width:300px;height:2000px;position:relative;background:pink;">
+         <div  id="movediv1" style="width:200px;height:200px;background:yellow;float:left;position:left;"></div>
+         <div  id="movediv2"  style="width:100px;height:100px;background:green;float:right;position:right;position:absolute;"></div>
+      </div>   
+   </body>
+         <script>
+           var d=document,
+               g='getElementById',
+               md=d[g]("movediv2");
+           //$(document).ready(function(){
+                 var stx=sty=etx=ety=curX=curY=0;
+
+                md.addEventListener("touchstart",function(event){
+                        stx=event.touches[0].pageX;
+                        sty=event.touches[0].pageY;
+                        event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (etx) + 'px, ' + (ety) + 'px,0px)';
+                     },false);
+                md.addEventListener("touchmove",function(event){
+                     event.preventDefault(); 
+                     curX = event.targetTouches[0].pageX - stx+etx; 
+                     curY = event.targetTouches[0].pageY - sty+ety;
+                     event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (curX) + 'px, ' + (curY) + 'px,0px)';
+                },false);
+                md.addEventListener("touchend",function(event){
+                    etx=curX;
+                   ety=curY;
+                },false);   
+         //  });
+   </script>
+</html>
