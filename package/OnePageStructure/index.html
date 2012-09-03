@@ -64,11 +64,12 @@ function loaded() {
 			}
 		},
 		onScrollMove: function () {
+			console.log("pullDownOffset: " + pullDownOffset + "    this.y: " + this.y + "  ");
 			if (this.y + pullDownOffset < 0 && document.querySelector('.gHeader').offsetHeight > -document.querySelector('.gHeader').offsetTop ) {
-				console.log('ggg   ' + this.y + '   ' + pullDownOffset);
+				// pull the top bar hidden
 				document.querySelector('.gHeader').style.marginTop = ( this.y + pullDownOffset ) + 'px';
-			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < 0) {
-				console.log('ggg   ' + this.y + '   ' + pullDownOffset);
+			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < - document.querySelector('.gHeader').offsetHeight +( this.y + pullDownOffset )) {
+				// push the top bar visible
 				document.querySelector('.gHeader').style.marginTop = - document.querySelector('.gHeader').offsetHeight + ( this.y + pullDownOffset ) + 'px';
 			} else if (this.y > 5 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
@@ -98,6 +99,23 @@ function loaded() {
 				pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';				
 				pullUpAction();	// Execute custom function (ajax call?)
 			}
+		},
+		onBeforeScrollMove: function (e) {
+			if(document.querySelector('.gHeader').offsetTop > - document.querySelector('.gHeader').offsetHeight){
+				//
+				//this.disable();
+			}
+		},   
+		onTouchEnd: function () {
+			if(false) {
+			} else if (document.querySelector('.gHeader').offsetHeight < -document.querySelector('.gHeader').offsetTop) {
+				// if pull too far, set back
+				document.querySelector('.gHeader').style.marginTop = -document.querySelector('.gHeader').offsetHeight + 'px';
+			} else if (document.querySelector('.gHeader').offsetTop > 0) {
+				// if push too near, set back
+				document.querySelector('.gHeader').style.marginTop = 0;
+			} 
+			
 		}
 	});
 	
@@ -143,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 5
 	height:40px;
 	line-height:40px;
 	padding:5px 10px;
-	border-bottom:1px solid #ccc;
 	font-weight:bold;
 	font-size:14px;
 	color:#888;
@@ -367,7 +384,7 @@ ul,li{padding:0;margin:0;}
 	</div>
 	<div class="oWrap"><!--  -->
 		<div class="oBox _current">
-			<div class="oHeader" style="height:36px;">
+			<div class="oHeader">
 				<div class="header1">ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
 				<div class="header2" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分2</div>
 			</div>
