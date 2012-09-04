@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html manifest="app.mainfest0">
+<!--html manifest="app.mainfest"-->
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>搜狐微博</title>
@@ -68,10 +69,11 @@ function loaded() {
 			if (this.y + pullDownOffset < 0 && document.querySelector('.gHeader').offsetHeight > -document.querySelector('.gHeader').offsetTop ) {
 				// pull the top bar hidden
 				document.querySelector('.gHeader').style.marginTop = ( this.y + pullDownOffset ) + 'px';
-			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < - document.querySelector('.gHeader').offsetHeight +( this.y + pullDownOffset )) {
+			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < - document.querySelector('.gHeader').offsetHeight +( this.y + pullDownOffset) && document.querySelector('.gHeader').offsetTop < 0 ) {
 				// push the top bar visible
 				document.querySelector('.gHeader').style.marginTop = - document.querySelector('.gHeader').offsetHeight + ( this.y + pullDownOffset ) + 'px';
-			} else if (this.y > 5 && !pullDownEl.className.match('flip')) {
+			}
+			if (this.y > 5 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
 				pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
 				this.minScrollY = 0;
@@ -105,6 +107,7 @@ function loaded() {
 				//
 				//this.disable();
 			}
+			window.scrollTo(0, 1);
 		},   
 		onTouchEnd: function () {
 			if(false) {
@@ -121,29 +124,9 @@ function loaded() {
 	
 	// other onload functions
 	document.querySelector('.gHeader').style.height = document.querySelector('.gHeader').querySelector('div').clientHeight + 'px';
-	document.querySelector('body').style.height = window.innerHeight + 66 + 'px';
+	if(/iPhone/.test(navigator.userAgent)) document.querySelector('body').style.height = window.innerHeight + 66 + 'px';
 	window.scrollTo(0, 1);
 	
-	//var gHeader = document.querySelector('.gHeader');
-	//var iWrap = document.querySelectorAll('.oBox')[1];
-	//var stx=sty=etx=ety=curX=curY=0;
-
-	//md.addEventListener("touchstart",function(event){
-	//		stx=event.touches[0].pageX;
-	//		sty=event.touches[0].pageY;
-	//		event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (etx) + 'px, ' + (ety) + 'px,0px)';
-	//	 },false);
-	//md.addEventListener("touchmove",function(event){
-	//	 event.preventDefault(); 
-	//	 curX = event.targetTouches[0].pageX - stx+etx; 
-	//	 curY = event.targetTouches[0].pageY - sty+ety;
-	//	 event.targetTouches[0].target.style.webkitTransform =  'translate3d(' + (curX) + 'px, ' + (curY) + 'px,0px)';
-	//},false);
-	//md.addEventListener("touchend",function(event){
-	//	etx=curX;
-	//   ety=curY;
-	//},false);   
-
 }
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
@@ -358,10 +341,13 @@ ul,li{padding:0;margin:0;}
 
 
 /* default size */
-.gHeader{height:30px;}
+.gHeader{height:10px;}
+.oHeader{height:90px;}
 
 
 /* color */
+html{background:#B00;}
+body{background:#B0B;}
 .mWrap{background:#ccc;}
 .gHeader,.gFooter{background:#FD0;}
 .oHeader,.oFooter{background:#2BB;}
@@ -376,28 +362,37 @@ ul,li{padding:0;margin:0;}
 <div class="gBox _middle">
 	<div class="gHeader">
 		<div class="header1">
-			ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
-			SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a>
-			HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a>
+			TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+			TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
+			BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
 			<br>
-			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 18) + 'px';">HEIGHT Up</a>
-			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 18) + 'px';">HEIGHT Down</a>
+			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 30) + 'px';">+HEIGHT</a>
+			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 		</div>
 	</div>
 	<div class="oWrap"><!--  -->
 		<div class="oBox _current">
 			<div class="oHeader">
-				<div class="header1">ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
-				<div class="header2" onclick="this.innerHTML += '<br>aaa'; this.parentNode.style.height = (this.parentNode.clientHeight + 18) + 'px';">当前box固顶部分2</div>
+				<div class="header1">
+					TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+					TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
+					BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
+					<br>
+					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 30) + 'px';">+HEIGHT</a>
+					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
+				</div>
 			</div>
-			<div class="mWrap" id="wrapper"><!-- iScroll 应用区域，高度可控 -->
+			<div class="mWrap" id="wrapper">
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
 					<div id="pullDown">
 						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
 					</div>
 					<ul id="thelist">
 						<li>
-							See一个后要Hide一个<br>
+							包括里层和外层的画面切换动画<br>
+							See一个后要Hide一个，不要跨层级<br>
+							页面中的id样式没有使用，只供js用，随意改<br>
+							使用的js方法均为演示做动画需要发生的样式及类变化<br>
 							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
 							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
 							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
@@ -416,9 +411,9 @@ ul,li{padding:0;margin:0;}
 		</div>
 		<div class="oBox">
 			<div class="mWrap">
-				ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> 
-				SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> 
-				HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a>
+				TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+				TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
+				BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
 				<p>another oBox</p>
 			</div>
 		</div>
@@ -430,7 +425,11 @@ ul,li{padding:0;margin:0;}
 </div>
 
 <div class="gBox">
-	<div>ROOL: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a> SEE: <a href="#" onclick="seeTop(this);">TOP</a> <a href="#" onclick="seeBottom(this);">BOTTOM</a> HIDE: <a href="#" onclick="hideTop(this);">TOP</a> <a href="#" onclick="hideBottom(this);">BOTTOM</a></div>
+	<div>
+		TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+		TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
+		BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
+	</div>
 	<div class="iWrap">another gBox</div>
 </div>
 
