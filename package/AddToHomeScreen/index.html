@@ -62,9 +62,11 @@
 			href="i/startup-iphone-retina-portrait.png"  
 			media="(device-width:320px) and (orientation:portrait)  and (-webkit-min-device-pixel-ratio: 2)">
 		
-		<link rel="stylesheet" type="text/css" href="c/g.css">
-		
 		<style>
+			/* reset */
+			body{margin:0;-webkit-text-size-adjust:none;}
+			
+			/* reset */
 			.icon,.startup{background-size:100%;background-repeat:no-repeat;}
 			
 			@media (device-width:768px) {
@@ -107,6 +109,17 @@
 			}
 
 		</style>
+		
+		<!-- Add2Home Widget -->
+		<link rel="stylesheet" href="c/add2home.css">
+		<script>
+			var addToHomeConfig = {
+				touchIcon: true,
+			};
+		</script>
+		<script type="text/javascript" src="js/add2home.js" charset="utf-8"></script>
+		<!-- /Add2Home Widget -->
+
 	</head>
 	<body>
 		
@@ -121,8 +134,7 @@
 		<div class="startup">not particular</div>
 		
 		<h3>使用Add2Home插件完成提示</h3>
-		<link rel="stylesheet" href="c/add2home.css">
-		<script type="text/javascript" src="js/add2home.js" charset="utf-8"></script>
+		<div><a href="http://cubiq.org/add-to-home-screen" target="_blank">插件官网</a></div>
 		<div><a href="?" onclick="addToHome.reset();">关闭后复位显示</a></div>
 
 
