@@ -315,12 +315,12 @@ ul,li{padding:0;margin:0;}
 
 /* layout */
 .gBox,.oBox{display:-webkit-box;-webkit-box-orient:vertical;}
-.oWrap,.mWrap{-webkit-box-flex:1;}
+.gWrap,.oWrap{-webkit-box-flex:1;}
 .iWrap{}
 
 /* box module */
 .gBox,.oBox{position:absolute;width:100%;top:0;bottom:0;overflow:hidden;}
-.oWrap,.mWrap{position:relative;}
+.gWrap,.oWrap{position:relative;}
 .gHeader,.oHeader,.gFooter,.oFooter{position:relative;z-index:3;line-height:30px;overflow:hidden;}
 
 /* animition */
@@ -339,6 +339,7 @@ ul,li{padding:0;margin:0;}
 ._middle{-webkit-transform:translate3D(0, 0, 0);}
 ._bottom{-webkit-transform:translate3D(0, 100%, 0);}
 
+._fix{position:absolute;}
 
 /* default size */
 .gHeader{height:10px;}
@@ -348,11 +349,11 @@ ul,li{padding:0;margin:0;}
 /* color */
 html{background:#B00;}
 body{background:#B0B;}
-.mWrap{background:#ccc;}
+.oWrap{background:#ccc;}
 .gHeader,.gFooter{background:#FD0;}
 .oHeader,.oFooter{background:#2BB;}
 .gBox:nth-child(2){background:#99e;}
-.oBox:nth-child(2) .mWrap{background:#6FDB92;}
+.oBox:nth-child(2) .oWrap{background:#6FDB92;}
 </style>
 
 
@@ -370,7 +371,7 @@ body{background:#B0B;}
 			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 		</div>
 	</div>
-	<div class="oWrap"><!--  -->
+	<div class="gWrap"><!--  -->
 		<div class="oBox _current">
 			<div class="oHeader">
 				<div class="header1">
@@ -382,7 +383,7 @@ body{background:#B0B;}
 					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 				</div>
 			</div>
-			<div class="mWrap" id="wrapper">
+			<div class="oWrap" id="wrapper">
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
 					<div id="pullDown">
 						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
@@ -410,7 +411,7 @@ body{background:#B0B;}
 			</div>
 		</div>
 		<div class="oBox">
-			<div class="mWrap">
+			<div class="oWrap">
 				TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 				TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
 				BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
