@@ -242,7 +242,7 @@ function roolLeft(t) {
 	var cur = getTheBox(t, boxName);
 	var right = getNextBox(cur, boxName);
 
-	addClassAnimate(right, boxName, "box_after box_silent", function() {
+	addClassAnimate(right, boxName, "box_right box_silent", function() {
 		addClassAnimate(right, boxName, "box_current", function() {});
 		addClassAnimate(cur, boxName, "", function() {});
 	});
@@ -253,9 +253,9 @@ function roolRight(t) {
 	var cur = getTheBox(t, boxName);
 	var left = getNextBox(cur, boxName);
 
-	addClassAnimate(left, boxName, "box_before box_silent", function() {
+	addClassAnimate(left, boxName, "box_left box_silent", function() {
 		addClassAnimate(left, boxName, "box_current", function() {});
-		addClassAnimate(cur, boxName, "box_after", function() {
+		addClassAnimate(cur, boxName, "box_right", function() {
 			addClassAnimate(cur, boxName, "box_silent", function() {
 				addClassAnimate(cur, boxName, "", function() {});
 			});
@@ -332,10 +332,10 @@ ul,li{padding:0;margin:0;}
 .box{-webkit-transition:-webkit-transform 0.4s;-webkit-transform:translate3d(-100%, 0, 0);}
 .box_silent{-webkit-transition:none;}
 
-.box_before,.box_current,.box_after{z-index:1;}
-.box_before{-webkit-transform:translate3d(-100%, 0, 0);}
+.box_left,.box_current,.box_right{z-index:1;}
+.box_left{-webkit-transform:translate3d(-100%, 0, 0);}
 .box_current{-webkit-transform:translate3d(0, 0, 0);}
-.box_after{-webkit-transform:translate3d(100%, 0, 0);}
+.box_right{-webkit-transform:translate3d(100%, 0, 0);}
 
 .box_above,.box_middle,.box_below{z-index:2;}
 .box_above{-webkit-transform:translate3d(0, -100%, 0);}
@@ -374,6 +374,53 @@ body{background:#B0B;}
 <body>
 
 <div class="box gBox box_current">
+
+	<!--==
+	
+	box 动画说明：设A为当前看到的box（类 box_current），B为将要看的box，做动画时两者添加类的过程为
+
+	1.  B 在 A 的右边，效果是 A 和 B 同时向左滑动：
+		步数 A						B
+		0 	 box box_current 		box
+		1 	 box box_current 		box box_silent box_right
+		2 	 box 					box box_current
+
+	2.  B 在 A 的左边，效果是 A 和 B 同时向右滑动：
+		步数 A						B
+		0 	 box box_current 		box 
+		1 	 box box_current 		box box_silent box_before
+		2 	 box box_right 			box box_current
+		3 	 box box_silent			box box_current
+		4 	 box 					box box_current
+
+	3.  效果是 B 从 A 的上边向下滑出盖在 A 上面：
+		步数 A						B
+		0 	 box box_current 		box 
+		1 	 box box_current 		box box_silent box_above
+		2 	 box box_current 		box box_middle
+
+	3.1 效果是 B 向上滑出：
+		步数 A						B
+		0 	 box box_current 		box box_middle
+		1 	 box box_current 		box box_above
+		2 	 box box_current 		box box_silent
+		3 	 box box_current 		box
+
+	4.  效果是 B 从 A 的下边向上滑出盖在 A 上面：
+		步数 A						B
+		0 	 box box_current 		box 
+		1 	 box box_current 		box box_silent box_below
+		2 	 box box_current 		box box_middle
+
+	4.1 效果是 B 向下滑出：
+		步数 A						B
+		0 	 box box_current 		box box_middle
+		1 	 box box_current 		box box_below
+		2 	 box box_current 		box box_silent
+		3 	 box box_current 		box
+
+	==-->
+
 	<!--==全局lay，放置浮层、气泡==-->
 	<div class="boxLay gBoxLay"></div>
 	
