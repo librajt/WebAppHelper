@@ -66,12 +66,12 @@ function loaded() {
 		},
 		onScrollMove: function () {
 			console.log("pullDownOffset: " + pullDownOffset + "    this.y: " + this.y + "  ");
-			if (this.y + pullDownOffset < 0 && document.querySelector('.gHeader').offsetHeight > -document.querySelector('.gHeader').offsetTop ) {
+			if (this.y + pullDownOffset < 0 && document.querySelector('.gHead').offsetHeight > -document.querySelector('.gHead').offsetTop ) {
 				// pull the top bar hidden
-				document.querySelector('.gHeader').style.marginTop = ( this.y + pullDownOffset ) + 'px';
-			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHeader').offsetTop < - document.querySelector('.gHeader').offsetHeight +( this.y + pullDownOffset) && document.querySelector('.gHeader').offsetTop < 0 ) {
+				document.querySelector('.gHead').style.marginTop = ( this.y + pullDownOffset ) + 'px';
+			} else if (this.y + pullDownOffset >= 0 && document.querySelector('.gHead').offsetTop < - document.querySelector('.gHead').offsetHeight +( this.y + pullDownOffset) && document.querySelector('.gHead').offsetTop < 0 ) {
 				// push the top bar visible
-				document.querySelector('.gHeader').style.marginTop = - document.querySelector('.gHeader').offsetHeight + ( this.y + pullDownOffset ) + 'px';
+				document.querySelector('.gHead').style.marginTop = - document.querySelector('.gHead').offsetHeight + ( this.y + pullDownOffset ) + 'px';
 			}
 			if (this.y > 5 && !pullDownEl.className.match('flip')) {
 				pullDownEl.className = 'flip';
@@ -103,7 +103,7 @@ function loaded() {
 			}
 		},
 		onBeforeScrollMove: function (e) {
-			if(document.querySelector('.gHeader').offsetTop > - document.querySelector('.gHeader').offsetHeight){
+			if(document.querySelector('.gHead').offsetTop > - document.querySelector('.gHead').offsetHeight){
 				//
 				//this.disable();
 			}
@@ -111,19 +111,19 @@ function loaded() {
 		},   
 		onTouchEnd: function () {
 			if(false) {
-			} else if (document.querySelector('.gHeader').offsetHeight < -document.querySelector('.gHeader').offsetTop) {
+			} else if (document.querySelector('.gHead').offsetHeight < -document.querySelector('.gHead').offsetTop) {
 				// if pull too far, set back
-				document.querySelector('.gHeader').style.marginTop = -document.querySelector('.gHeader').offsetHeight + 'px';
-			} else if (document.querySelector('.gHeader').offsetTop > 0) {
+				document.querySelector('.gHead').style.marginTop = -document.querySelector('.gHead').offsetHeight + 'px';
+			} else if (document.querySelector('.gHead').offsetTop > 0) {
 				// if push too near, set back
-				document.querySelector('.gHeader').style.marginTop = 0;
+				document.querySelector('.gHead').style.marginTop = 0;
 			} 
 			
 		}
 	});
 	
 	// other onload functions
-	document.querySelector('.gHeader').style.height = document.querySelector('.gHeader').querySelector('div').clientHeight + 'px';
+	//document.querySelector('.gHead').style.height = document.querySelector('.gHead').querySelector('div').clientHeight + 'px';
 	if(/iPhone/.test(navigator.userAgent) && !window.navigator.standalone) document.querySelector('body').style.height = window.innerHeight + 66 + 'px';
 	window.scrollTo(0, 1);
 	
@@ -234,7 +234,7 @@ function addClassAnimate(elem, boxName, className, callback, delay) {
 			elem.callback();
 		}
 	}, delay != 0 ? delay : 0);
-	elem.className = (boxName + " " + className);
+	elem.className = ("box " + boxName + " " + className);
 }
 
 function roolLeft(t) {
@@ -242,8 +242,8 @@ function roolLeft(t) {
 	var cur = getTheBox(t, boxName);
 	var right = getNextBox(cur, boxName);
 
-	addClassAnimate(right, boxName, "_right _silence", function() {
-		addClassAnimate(right, boxName, "_current", function() {});
+	addClassAnimate(right, boxName, "box_after box_silent", function() {
+		addClassAnimate(right, boxName, "box_current", function() {});
 		addClassAnimate(cur, boxName, "", function() {});
 	});
 }
@@ -253,10 +253,10 @@ function roolRight(t) {
 	var cur = getTheBox(t, boxName);
 	var left = getNextBox(cur, boxName);
 
-	addClassAnimate(left, boxName, "_left _silence", function() {
-		addClassAnimate(left, boxName, "_current", function() {});
-		addClassAnimate(cur, boxName, "_right", function() {
-			addClassAnimate(cur, boxName, "_silence", function() {
+	addClassAnimate(left, boxName, "box_before box_silent", function() {
+		addClassAnimate(left, boxName, "box_current", function() {});
+		addClassAnimate(cur, boxName, "box_after", function() {
+			addClassAnimate(cur, boxName, "box_silent", function() {
 				addClassAnimate(cur, boxName, "", function() {});
 			});
 		}, 400);
@@ -268,16 +268,16 @@ function seeTop(t) {
 	var cur = getTheBox(t, boxName);
 	var top = getNextBox(cur, boxName);
 
-	addClassAnimate(top, boxName, "_top _silence", function() {
-		addClassAnimate(top, boxName, "_middle", function() {});
+	addClassAnimate(top, boxName, "box_above box_silent", function() {
+		addClassAnimate(top, boxName, "box_middle", function() {});
 	});
 }
 function hideTop(t) {
 	var boxName = getTheBoxName(t);
 	var top = getTheBox(t, boxName);
 
-	addClassAnimate(top, boxName, "_top", function() {
-		addClassAnimate(top, boxName, "_silence", function() {
+	addClassAnimate(top, boxName, "box_above", function() {
+		addClassAnimate(top, boxName, "box_silent", function() {
 			addClassAnimate(top, boxName, "", function() {});
 		});
 	}, 400);
@@ -288,16 +288,16 @@ function seeBottom(t) {
 	var cur = getTheBox(t, boxName);
 	var bottom = getNextBox(cur, boxName);
 
-	addClassAnimate(bottom, boxName, "_bottom _silence", function() {
-		addClassAnimate(bottom, boxName, "_middle", function() {});
+	addClassAnimate(bottom, boxName, "box_below box_silent", function() {
+		addClassAnimate(bottom, boxName, "box_middle", function() {});
 	});
 }
 function hideBottom(t) {
 	var boxName = getTheBoxName(t);
 	var bottom = getTheBox(t, boxName);
 
-	addClassAnimate(bottom, boxName, "_bottom", function() {
-		addClassAnimate(bottom, boxName, "_silence", function() {
+	addClassAnimate(bottom, boxName, "box_below", function() {
+		addClassAnimate(bottom, boxName, "box_silent", function() {
 			addClassAnimate(bottom, boxName, "", function() {});
 		});
 	}, 400);
@@ -310,71 +310,86 @@ function hideBottom(t) {
 
 <style>
 html{-webkit-text-size-adjust:none;position:relative;height:100%;}
-body{padding:0;margin:0;overflow:hidden;position:relative;height:100%;}
+body{padding:0;margin:0;overflow:hidden;position:relative;height:100%;min-width:320px;}
 ul,li{padding:0;margin:0;}
 
-/* layout */
-.gBox,.oBox{display:-webkit-box;-webkit-box-orient:vertical;}
-.gWrap,.oWrap{-webkit-box-flex:1;}
-.iWrap{}
+
+
+
+.box{display:-webkit-box;-webkit-box-orient:vertical;}
+.boxMain{-webkit-box-flex:1;}
 
 /* box module */
-.gBox,.oBox{position:absolute;width:100%;top:0;bottom:0;overflow:hidden;}
-.gWrap,.oWrap{position:relative;}
-.gHeader,.oHeader,.gFooter,.oFooter{position:relative;z-index:3;line-height:30px;overflow:hidden;}
+.box{position:absolute;width:100%;top:0;bottom:0;overflow:hidden;}
+.boxLay{position:absolute;height:100%;width:100%;visibility:hidden;}
+.boxMain{overflow:hidden;position:relative;}
+.boxHead,.boxFoot{overflow:hidden;}
+//.boxFlow{position:relative;z-index:3;}
 
 /* animition */
-.gHeader,.oHeader,.gFooter,.oFooter{-webkit-transition:height .4s;}
+//.gHead,.oHead,.gFoot,.oFoot{-webkit-transition:height .4s;}
 
-.gBox,.oBox{-webkit-transition:-webkit-transform .4s;-webkit-transform:translate3D(-100%, 0, 0);}
-._silence{-webkit-transition:none;}
+.box{-webkit-transition:-webkit-transform 0.4s;-webkit-transform:translate3d(-100%, 0, 0);}
+.box_silent{-webkit-transition:none;}
 
-._left,._current,._right{z-index:1;}
-._left{-webkit-transform:translate3D(-100%, 0, 0);}
-._current{-webkit-transform:translate3D(0, 0, 0);}
-._right{-webkit-transform:translate3D(100%, 0, 0);}
+.box_before,.box_current,.box_after{z-index:1;}
+.box_before{-webkit-transform:translate3d(-100%, 0, 0);}
+.box_current{-webkit-transform:translate3d(0, 0, 0);}
+.box_after{-webkit-transform:translate3d(100%, 0, 0);}
 
-._top,._middle,._bottom{z-index:2;}
-._top{-webkit-transform:translate3D(0, -100%, 0);}
-._middle{-webkit-transform:translate3D(0, 0, 0);}
-._bottom{-webkit-transform:translate3D(0, 100%, 0);}
+.box_above,.box_middle,.box_below{z-index:2;}
+.box_above{-webkit-transform:translate3d(0, -100%, 0);}
+.box_middle{-webkit-transform:translate3d(0, 0, 0);}
+.box_below{-webkit-transform:translate3d(0, 100%, 0);}
 
-._fix{position:absolute;}
+.boxFlow{-webkit-transition:height .4s;}
+.boxFlow_above,.boxFlow_below{position:absolute;width:100%;overflow:hidden;}
+.boxFlow_above .fixed{top:0;}
+.boxFlow_below .fixed{bottom:0;}
 
-/* default size */
-.gHeader{height:10px;}
-.oHeader{height:90px;}
+.fixed{position:absolute;width:100%;z-index:1;}
+
+.boxHead .boxFlow,.boxFoot .boxFlow{-webkit-transition:margin .4s;}
+
+
+.gBox,.oBox{}
+.gHead,.gFoot{}
+.gBoxLay,.oBoxLay{}
+.gMain,.oMain{}
+
 
 
 /* color */
 html{background:#B00;}
 body{background:#B0B;}
-.oWrap{background:#ccc;}
-.gHeader,.gFooter{background:#FD0;}
-.oHeader,.oFooter{background:#2BB;}
+.oMain{background:#ccc;}
+.gHead,.gFoot{background:#FD0;}
+.oHead,.oFoot{background:#2BB;}
 .gBox:nth-child(2){background:#99e;}
-.oBox:nth-child(2) .oWrap{background:#6FDB92;}
+.oBox:nth-child(2) .oMain{background:#6FDB92;}
 </style>
 
 
 </head>
 <body>
 
-<div class="gBox _middle">
-	<div class="gHeader">
-		<div class="header1">
+<div class="box gBox box_current">
+	<!--==全局lay，放置浮层、气泡==-->
+	<div class="boxLay gBoxLay"></div>
+	
+	<!--==全局头，包含多种头部，按需显示并设置值==-->
+	<div class="boxHead gHead">
+		<!--==头部容器，按需显示，默认为display:none且 margin-top：负高度。显示时去掉noDis并设置margin值==-->
+		<div class="boxFlow header1" style="">
 			TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 			TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
 			BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
-			<br>
-			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 30) + 'px';">+HEIGHT</a>
-			<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 		</div>
 	</div>
-	<div class="gWrap"><!--  -->
-		<div class="oBox _current">
-			<div class="oHeader">
-				<div class="header1">
+	<div class="boxMain gMain"><!--  -->
+		<div class="box oBox box_current">
+			<div class="boxHead oHead">
+				<div class="boxFlow header1">
 					TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 					TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
 					BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
@@ -383,7 +398,7 @@ body{background:#B0B;}
 					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 				</div>
 			</div>
-			<div class="oWrap" id="wrapper">
+			<div class="boxMain oMain" id="wrapper">
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
 					<div id="pullDown">
 						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
@@ -406,12 +421,12 @@ body{background:#B0B;}
 				</div>
 				<!-- iScrollBar，js运行后会自动生成于此-->
 			</div>
-			<div class="oFooter">
+			<div class="boxFoot oFoot">
 				<div class="footer1">当前box固底部分1</div>
 			</div>
 		</div>
-		<div class="oBox">
-			<div class="oWrap">
+		<div class="box oBox">
+			<div class="boxMain oMain">
 				TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 				TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
 				BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
@@ -420,12 +435,12 @@ body{background:#B0B;}
 		</div>
 			
 	</div>
-	<div class="gFooter">
+	<div class="boxFoot gFoot">
 		<div class="footer1">全局固底部分1</div>
 	</div>
 </div>
 
-<div class="gBox">
+<div class="box gBox">
 	<div>
 		TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 		TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
