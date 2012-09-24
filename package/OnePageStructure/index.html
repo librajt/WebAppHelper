@@ -124,7 +124,7 @@ function loaded() {
 	
 	// other onload functions
 	//document.querySelector('.gHead').style.height = document.querySelector('.gHead').querySelector('div').clientHeight + 'px';
-	if(/iPhone/.test(navigator.userAgent) && !window.navigator.standalone) document.querySelector('body').style.height = window.innerHeight + 66 + 'px';
+	//if(/iPhone/.test(navigator.userAgent) && !window.navigator.standalone) document.querySelector('body').style.height = window.innerHeight + 60 + 'px';
 	window.scrollTo(0, 1);
 	
 }
@@ -314,23 +314,18 @@ body{padding:0;margin:0;overflow:hidden;position:relative;height:100%;min-width:
 ul,li{padding:0;margin:0;}
 
 
-
-
 .box{display:-webkit-box;-webkit-box-orient:vertical;}
-.boxMain{-webkit-box-flex:1;}
+.boxMain,.iWrap{-webkit-box-flex:1;display:-webkit-box;-webkit-box-orient:vertical;}
+.boxMain.iScrolled{display:block;}
 
 /* box module */
 .box{position:absolute;width:100%;top:0;bottom:0;overflow:hidden;}
 .boxLay{position:absolute;height:100%;width:100%;visibility:hidden;}
 .boxMain{overflow:hidden;position:relative;}
 .boxHead,.boxFoot{overflow:hidden;}
-//.boxFlow{position:relative;z-index:3;}
 
 /* animition */
-//.gHead,.oHead,.gFoot,.oFoot{-webkit-transition:height .4s;}
-
 .box{-webkit-transition:-webkit-transform 0.4s;-webkit-transform:translate3d(-100%, 0, 0);}
-.box_silent{-webkit-transition:none;}
 
 .box_left,.box_current,.box_right{z-index:1;}
 .box_left{-webkit-transform:translate3d(-100%, 0, 0);}
@@ -343,14 +338,15 @@ ul,li{padding:0;margin:0;}
 .box_below{-webkit-transform:translate3d(0, 100%, 0);}
 
 .boxFlow{-webkit-transition:height .4s;}
-.boxFlow_above,.boxFlow_below{position:absolute;width:100%;overflow:hidden;}
+.boxFlow_above,.boxFlow_below{position:absolute;z-index:5;width:100%;overflow:hidden;}
 .boxFlow_above .fixed{top:0;}
 .boxFlow_below .fixed{bottom:0;}
 
-.fixed{position:absolute;width:100%;z-index:1;}
+.boxHead .boxFlow,.boxFoot .boxFlow{-webkit-transition:margin 0.2s,opacity 0.1s;}
+.boxFoot .boxFlow{bottom:0;}
 
-.boxHead .boxFlow,.boxFoot .boxFlow{-webkit-transition:margin .4s;}
-
+.box_silent,.boxFlow_silent{-webkit-transition:none!important;}
+.fixed{position:absolute;z-index:1;}
 
 .gBox,.oBox{}
 .gHead,.gFoot{}
@@ -424,28 +420,37 @@ body{background:#B0B;}
 	<!--==全局lay，放置浮层、气泡==-->
 	<div class="boxLay gBoxLay"></div>
 	
-	<!--==全局头，包含多种头部，按需显示并设置值==-->
 	<div class="boxHead gHead">
-		<!--==头部容器，按需显示，默认为display:none且 margin-top：负高度。显示时去掉noDis并设置margin值==-->
-		<div class="boxFlow header1" style="">
-			TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
-			TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
-			BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
+	<!--==使用margin-top属性
+		出现：
+		0 	默认boxFlow样式为：visiblity:hidden;
+		1 	js计算其内容的高度，赋值给boxFlow：margin-top:负高度;
+		2 	js修改样式为：visibility:visible;margin-top:0px; 实现上滑动画
+
+		消失：
+		0 	样式为：visibility:visible;margin-top:0px;
+		1 	js修改样式为：visibility:hidden;margin-top:负高度; 实现下滑动画
+
+		如果boxFlow为浮层，添加 boxFlow_ 样式即可，其内容不必fixed
+		==-->
+		<div class="boxFlow" style="visibility:visible;margin-top:0px">
+			<div class="header1">
+				TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
+				TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
+				BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
+			</div>
 		</div>
 	</div>
-	<div class="boxMain gMain"><!--  -->
+	<div class="boxMain gMain">
 		<div class="box oBox box_current">
 			<div class="boxHead oHead">
 				<div class="boxFlow header1">
 					TO: <a href="#" onclick="roolLeft(this);">LEFT</a> <a href="#" onclick="roolRight(this);">RIGHT</a>
 					TOP: <a href="#" onclick="seeTop(this);">SEE</a> <a href="#" onclick="hideTop(this);">HIDE</a>
 					BOTTOM: <a href="#" onclick="seeBottom(this);">SEE</a> <a href="#" onclick="hideBottom(this);">HIDE</a>
-					<br>
-					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight + 30) + 'px';">+HEIGHT</a>
-					<a href="#" onclick="this.parentNode.parentNode.style.height = (this.parentNode.parentNode.clientHeight - 30) + 'px';">-HEIGHT</a>
 				</div>
 			</div>
-			<div class="boxMain oMain" id="wrapper">
+			<div class="boxMain oMain iScrolled" id="wrapper"><!-- iScroll运行之后添加类 iScrolled -->
 				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
 					<div id="pullDown">
 						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
@@ -454,7 +459,7 @@ body{background:#B0B;}
 						<li>
 							包括里层和外层的画面切换动画<br>
 							See一个后要Hide一个，不要跨层级<br>
-							页面中的id样式没有使用，只供js用，随意改<br>
+							页面中的id样式没有添加样式<br>
 							使用的js方法均为演示做动画需要发生的样式及类变化<br>
 							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
 							滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>滚<br>动<br>内<br>容<br>
@@ -483,7 +488,19 @@ body{background:#B0B;}
 			
 	</div>
 	<div class="boxFoot gFoot">
-		<div class="footer1">全局固底部分1</div>
+	<!--==foot使用margin-bottom属性
+		出现：
+		0 	默认boxFlow样式为：visiblity:hidden;
+		1 	js计算其内容的高度，赋值给boxFlow：margin-bottom:负高度;
+		2 	js修改样式为：visibility:visible;margin-bottom:0px; 实现上滑动画
+
+		消失：
+		0 	样式为：visibility:visible;margin-bottom:0px;
+		1 	js修改样式为：visibility:hidden;margin-bottom:负高度; 实现下滑动画
+
+		如果boxFlow为浮层，添加 boxFlow_ 样式即可，其内容不必fixed
+		==-->
+		<div class="boxFlow boxFlow_above footer1" style="visibility:visible;margin-bottom:0px;"><div class="footer1">------全局固底浮层1----</div></div>
 	</div>
 </div>
 
