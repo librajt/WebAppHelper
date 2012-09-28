@@ -53,7 +53,7 @@ function loaded() {
 	
 	myScroll = new iScroll('wrapper', {
 		useTransition: true,
-		checkDOMChanges: true,
+		//checkDOMChanges: true,
 		topOffset: pullDownOffset,
 		onRefresh: function () {
 			if (pullDownEl.className.match('loading')) {
@@ -332,7 +332,7 @@ ul,li{padding:0;margin:0;}
 .box_current{-webkit-transform:translate3d(0, 0, 0);}
 .box_right{-webkit-transform:translate3d(100%, 0, 0);}
 
-.box_above,.box_middle,.box_below{z-index:2;}
+.box_above,.box_middle,.box_below{z-index:2;}  /* z-index:3; by js */
 .box_above{-webkit-transform:translate3d(0, -100%, 0);}
 .box_middle{-webkit-transform:translate3d(0, 0, 0);}
 .box_below{-webkit-transform:translate3d(0, 100%, 0);}
@@ -451,7 +451,7 @@ body{background:#B0B;}
 				</div>
 			</div>
 			<div class="boxMain oMain iScrolled" id="wrapper"><!-- iScroll运行之后添加类 iScrolled -->
-				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域，为绝对定位 -->
+				<div class="iWrap" id="scroller"><!-- iScroll 滚动区域 -->
 					<div id="pullDown">
 						<i class="pullDownIcon"></i><span class="pullDownLabel">Pull down to refresh...</span>
 					</div>
