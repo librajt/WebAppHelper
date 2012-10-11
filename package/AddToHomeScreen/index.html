@@ -75,12 +75,15 @@
 			/* reset */
 			body{margin:0;-webkit-text-size-adjust:none;}
 
-			.test:after{content:'width:320px -- iPhone4/4S';}
-			@media (device-height:568px) {
-				.test:after{content:'height:568px -- iPhone5';}
+			.test:after{content:'width:320px -- iPhone3/3GS';}
+			@media (device-width:320px) and (-webkit-min-device-pixel-ratio: 2) {
+				.test:after{content:'width:320px, height:460px -- iPhone4/4S';}
+			}
+			@media (device-width:320px) and (device-height:568px) and (-webkit-min-device-pixel-ratio: 2) {
+				.test:after{content:'width:320px, height:568px -- iPhone5';}
 			}
 			@media (device-width:768px) {
-				.test:after{content:'width:768px -- iPad2-';}
+				.test:after{content:'width:768px -- iPad2/-';}
 			}
 			@media (device-width:768px) and (-webkit-min-device-pixel-ratio: 2) {
 				.test:after{content:'width:768px -- New iPad';}
