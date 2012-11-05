@@ -15,19 +15,20 @@
 			/* reset */
 			body{margin:0;-webkit-text-size-adjust:none;}
 			
-			body{background:url(i/r.gif);}
+			body{background:url(i/r.gif);padding:40px;}
 		</style>
 		
 	</head>
 	<body>
-		<h1>页面（Device）尺寸测量</h1>
+		<h1>尺寸测量</h1>
 		<h2>屏幕标尺，标尺刻度宽度为1px，间隔也为1px。</h2>
 		
 		<h3>一些其它数据</h3>
-		<div class="test"></div>
+		<div class="test" onclick="s();"></div>
 		<script>
-			(function(d){
+			function s(){
 				var res = ""; 
+				var d = document;
 				var Sys = {}; 
 				var ua = navigator.userAgent.toLowerCase(); 
 				var s; 
@@ -44,22 +45,20 @@
 				if (Sys.safari) res += 'Safari: ' + Sys.safari; 
 				//输出屏幕相关参数
 				res += "<br>";
-				res += "网页可见区域宽： "               + document.body.clientWidth      + "<br>";
-				res += "网页可见区域高： "               + document.body.clientHeight     + "<br>";
-				res += "网页可见区域宽(包括边线的宽)： " + document.body.offsetWidth      + "<br>";  
-				res += "网页可见区域高(包括边线的高)： " + document.body.offsetHeight     + "<br>";  
-				res += "网页正文全文宽： "               + document.body.scrollWidth      + "<br>";
-				res += "网页正文全文高： "               + document.body.scrollHeight     + "<br>";
-				res += "屏幕分辨率的宽： "               + window.screen.width            + "<br>";
-				res += "屏幕分辨率的高： "               + window.screen.height           + "<br>";
-				res += "屏幕可用工作区宽度： "           + window.screen.availWidth       + "<br>";
-				res += "屏幕可用工作区高度： "           + window.screen.availHeight      + "<br>";
-				res += "window.innerHeight： "           + window.innerHeight             + "<br>";
+				res += "网页宽： "          + window.innerWidth       + "<br>";
+				res += "网页高： "          + window.innerHeight      + "<br>";
+				res += "分辨率宽： "        + window.screen.width     + "<br>";
+				res += "分辨率高： "        + window.screen.height    + "<br>";
+				res += "设备像素比："       + window.devicePixelRatio + "<br>";
 				
 				d.querySelector('.test').innerHTML = res;
-			})(document);
+			};
+			window.onload = s();
+			window.scrollTo(0,1);
 		</script>
-
+		
+		<div onclick="this.innerHTML+='<br>'"><br>增加高度<br></div>
+		
 
 
 
