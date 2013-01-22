@@ -55,6 +55,7 @@
 			};
 			window.onload = s();
 			window.scrollTo(0,1);
+			window.addEventListener('orientationchange', function(){setTimeout(s, 1000)}, false);
 		</script>
 		
 		<div onclick="this.innerHTML+='<br>'"><br>增加高度<br></div>
